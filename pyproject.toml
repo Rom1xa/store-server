@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "store-server"
+version = "0.1.0"
+description = ""
+authors = ["Rom1xa <abakumoff.roman2018@yandex.ru>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+django = "4.2.15"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
