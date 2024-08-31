@@ -16,4 +16,4 @@ def products(request):
         "products": Product.objects.all(),  # type: ignore
         "categories": ProductCategory.objects.all(),  # type: ignore
     }
-    return render(request, "products/products.html", context=context)
+    return render(request, "products/products.html", context)
