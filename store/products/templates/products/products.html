@@ -9,7 +9,10 @@
             <div class="col-lg-3">
                 <h1 class="my-4">Store</h1>
                 <div class="list-group">
-                    {% for category in categories %}<a class="list-group-item" href="#">{{ category.name }}</a>{% endfor %}
+                    {% for category in categories %}
+                        <a class="list-group-item"
+                           href="{% url 'products:category' category.id %}">{{ category.name }}</a>
+                    {% endfor %}
                 </div>
             </div>
             <!-- /.col-lg-3 -->
@@ -78,32 +81,46 @@
                         </div>
                     {% endfor %}
                 </div>
-                <nav aria-label="Page navigation example">
-                    <ul class="pagination justify-content-center">
-                        <li class="page-item disabled">
-                            <a aria-disabled="true" class="page-link" href="#" tabindex="-1">Previous</a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link" href="#">1</a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link" href="#">2</a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link" href="#">3</a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link" href="#">Next</a>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
-        </div>
-    </div>
-{% endblock content %}
-{% block footer %}
-    <footer class="py-5 bg-dark">
-        <div class="container">
-            <p class="m-0 text-center text-white">Copyright &copy; Store 2022</p>
-        </div>
-    {% endblock footer %}
+                {% if products.has_other_pages %}
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination justify-content-center">
+                            {% if products.has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ products.previous_page_number }}">
+                                    {% else %}
+                                        <li class="page-item disabled">
+                                            <a class="page-link" disabled href="#" tabindex="-1">
+                                            {% endif %}
+                                        Предыдущий</a>
+                                    </li>
+                                    {% for count in products.paginator.page_range %}
+                                        {% if products.number == count %}
+                                            <li class="page-item active">
+                                            {% elif count >= products.number|add:-2 and count <= products.number|add:2 %}
+                                                <li class="page-item">
+                                                {% endif %}
+                                                <a class="page-link" href="?page={{ count }}">{{ count }}</a>
+                                            </li>
+                                        {% endfor %}
+                                        {% if products.has_next %}
+                                            <li class="page-item">
+                                                <a class="page-link" href="?page={{ products.next_page_number }}">
+                                                {% else %}
+                                                    <li class="page-item disabled">
+                                                        <a class="page-link" disabled href="#" tabindex="-1">
+                                                        {% endif %}
+                                                    Следующий</a>
+                                                </li>
+                                            </ul>
+                                        </nav>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endblock content %}
+                    {% block footer %}
+                        <footer class="py-5 bg-dark">
+                            <div class="container">
+                                <p class="m-0 text-center text-white">Copyright &copy; Store 2022</p>
+                            </div>
+                        {% endblock footer %}
