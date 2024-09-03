@@ -60,7 +60,7 @@
                     </a>
                 </div>
                 <div class="row">
-                    {% for product in products %}
+                    {% for product in object_list %}
                         <div class="col-lg-4 col-md-6 mb-4">
                             <div class="card h-100">
                                 <a href="#">
@@ -81,30 +81,30 @@
                         </div>
                     {% endfor %}
                 </div>
-                {% if products.has_other_pages %}
+                {% if page_obj.has_other_pages %}
                     <nav aria-label="Page navigation example">
                         <ul class="pagination justify-content-center">
-                            {% if products.has_previous %}
+                            {% if page_obj.has_previous %}
                                 <li class="page-item">
-                                    <a class="page-link" href="?page={{ products.previous_page_number }}">
+                                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">
                                     {% else %}
                                         <li class="page-item disabled">
                                             <a class="page-link" disabled href="#" tabindex="-1">
                                             {% endif %}
                                         Предыдущий</a>
                                     </li>
-                                    {% for count in products.paginator.page_range %}
-                                        {% if products.number == count %}
+                                    {% for count in page_obj.paginator.page_range %}
+                                        {% if page_obj.number == count %}
                                             <li class="page-item active">
-                                            {% elif count >= products.number|add:-2 and count <= products.number|add:2 %}
+                                            {% elif count >= page_obj.number|add:-2 and count <= page_obj.number|add:2 %}
                                                 <li class="page-item">
                                                 {% endif %}
                                                 <a class="page-link" href="?page={{ count }}">{{ count }}</a>
                                             </li>
                                         {% endfor %}
-                                        {% if products.has_next %}
+                                        {% if page_obj.has_next %}
                                             <li class="page-item">
-                                                <a class="page-link" href="?page={{ products.next_page_number }}">
+                                                <a class="page-link" href="?page={{ page_obj.next_page_number }}">
                                                 {% else %}
                                                     <li class="page-item disabled">
                                                         <a class="page-link" disabled href="#" tabindex="-1">

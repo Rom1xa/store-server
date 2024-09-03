@@ -1,47 +1,41 @@
-from django.core.exceptions import ObjectDoesNotExist
-from django.shortcuts import HttpResponseRedirect, redirect, render
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ObjectDoesNotExist
+from django.shortcuts import HttpResponseRedirect, redirect
+
+from common.views import TitleMixin
 
 from .models import Basket, Product, ProductCategory
-from django.core.paginator import Paginator
+
+from django.views.generic import ListView, TemplateView
 
 
-def index(request):
-    context = {
-        "title": "Store",
-    }
-    return render(request, "products/index.html", context)
+class IndexView(TitleMixin, TemplateView):
+    template_name = "products/index.html"
+    title = "Store"
 
 
-def products(request, category_id=None):
-    PER_PAGE = 3
+class ProductsListView(TitleMixin, ListView):
+    model = Product
+    template_name = "products/products.html"
+    paginate_by = 3
+    title = "Store -> Каталог"
 
-    if category_id:
-        category = ProductCategory.objects.get(id=category_id)
-        products = Product.objects.filter(category=category)
-    else:
-        products = Product.objects.all()
-
-    page = request.GET.get("page", 1)
-    if not isinstance(page, int):
-        if page.isdigit():
-            page = int(page)
+    def get_queryset(self):
+        category_id = self.kwargs.get("category_id")
+        if category_id:
+            category = ProductCategory.objects.get(id=category_id)  # pyright: ignore
+            products = Product.objects.filter(category=category)  # pyright: ignore
         else:
-            page = 1
+            products = super(ProductsListView, self).get_queryset()
 
-    paginator = Paginator(products, per_page=PER_PAGE)
-    page_products = paginator.page(page)
+        return products
 
-    return render(
-        request,
-        "products/products.html",
-        context={
-            "title": "Store - продукты",
-            "products": page_products,
-            "categories": ProductCategory.objects.all(),
-            "category_id": category_id,
-        },
-    )
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(ProductsListView, self).get_context_data()
+        context["categories"] = ProductCategory.objects.all()  # type: ignore
+        context["category_id"] = self.kwargs.get("category_id")
+
+        return context
 
 
 @login_required
