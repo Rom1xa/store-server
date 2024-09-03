@@ -5,6 +5,7 @@ from users.views import (
     UserLoginView,
     UserProfileView,
     UserRegistrationView,
+    EmailVerificationView,
 )
 
 app_name = "users"
@@ -14,4 +15,9 @@ urlpatterns = [
     path("registration/", UserRegistrationView.as_view(), name="registration"),
     path("profile/", UserProfileView.as_view(), name="profile"),
     path("logout/", LogoutView.as_view(), name="logout"),
+    path(
+        "verify/<str:email>/<uuid:code>",
+        EmailVerificationView.as_view(),
+        name="email_verification",
+    ),
 ]
