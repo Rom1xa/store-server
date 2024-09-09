@@ -5,20 +5,19 @@ from django.shortcuts import HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import CreateView, UpdateView
-from products.models import Basket
-
-
-from django.utils.timezone import now
-from users.forms import UserLoginForm, UserProfileForm, UserRegistrationForm
-from users.models import EmailVerification, User
 
 from common.views import TitleMixin
+from users.forms import UserLoginForm, UserProfileForm, UserRegistrationForm
+from users.models import EmailVerification, User
 
 
 class UserLoginView(TitleMixin, LoginView):
     template_name = "users/login.html"
     form_class = UserLoginForm
+
+    # TODO: check this
     # success_url = reverse_lazy("index")
+
     title = "Store -> Авторизация"
 
 

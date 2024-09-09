@@ -1,12 +1,11 @@
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import HttpResponseRedirect, redirect
+from django.views.generic import ListView, TemplateView
 
 from common.views import TitleMixin
 
 from .models import Basket, Product, ProductCategory
-
-from django.views.generic import ListView, TemplateView
 
 
 class IndexView(TitleMixin, TemplateView):
