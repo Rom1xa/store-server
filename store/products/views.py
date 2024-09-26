@@ -3,6 +3,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import HttpResponseRedirect, redirect
 from django.views.generic import ListView, TemplateView
 
+
 from common.views import TitleMixin
 
 from .models import Basket, Product, ProductCategory

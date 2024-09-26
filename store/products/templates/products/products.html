@@ -1,5 +1,5 @@
 {% extends 'products/base.html' %}
-{% load static %}
+{% load static cache %}
 {% block css %}
     <link href="{% static 'vendor/css/products.css' %}" rel="stylesheet" />
 {% endblock css %}
@@ -60,6 +60,7 @@
                     </a>
                 </div>
                 <div class="row">
+                    {% cache 30 object_list page_obj.number category_id %}
                     {% for product in object_list %}
                         <div class="col-lg-4 col-md-6 mb-4">
                             <div class="card h-100">
@@ -80,47 +81,48 @@
                             </div>
                         </div>
                     {% endfor %}
-                </div>
-                {% if page_obj.has_other_pages %}
-                    <nav aria-label="Page navigation example">
-                        <ul class="pagination justify-content-center">
-                            {% if page_obj.has_previous %}
-                                <li class="page-item">
-                                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">
-                                    {% else %}
-                                        <li class="page-item disabled">
-                                            <a class="page-link" disabled href="#" tabindex="-1">
-                                            {% endif %}
-                                        Предыдущий</a>
-                                    </li>
-                                    {% for count in page_obj.paginator.page_range %}
-                                        {% if page_obj.number == count %}
-                                            <li class="page-item active">
-                                            {% elif count >= page_obj.number|add:-2 and count <= page_obj.number|add:2 %}
-                                                <li class="page-item">
-                                                {% endif %}
-                                                <a class="page-link" href="?page={{ count }}">{{ count }}</a>
-                                            </li>
-                                        {% endfor %}
-                                        {% if page_obj.has_next %}
+                {% endcache %}
+            </div>
+            {% if page_obj.has_other_pages %}
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-center">
+                        {% if page_obj.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">
+                                {% else %}
+                                    <li class="page-item disabled">
+                                        <a class="page-link" disabled href="#" tabindex="-1">
+                                        {% endif %}
+                                    Предыдущий</a>
+                                </li>
+                                {% for count in page_obj.paginator.page_range %}
+                                    {% if page_obj.number == count %}
+                                        <li class="page-item active">
+                                        {% elif count >= page_obj.number|add:-2 and count <= page_obj.number|add:2 %}
                                             <li class="page-item">
-                                                <a class="page-link" href="?page={{ page_obj.next_page_number }}">
-                                                {% else %}
-                                                    <li class="page-item disabled">
-                                                        <a class="page-link" disabled href="#" tabindex="-1">
-                                                        {% endif %}
-                                                    Следующий</a>
-                                                </li>
-                                            </ul>
-                                        </nav>
-                                    {% endif %}
-                                </div>
+                                            {% endif %}
+                                            <a class="page-link" href="?page={{ count }}">{{ count }}</a>
+                                        </li>
+                                    {% endfor %}
+                                    {% if page_obj.has_next %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page={{ page_obj.next_page_number }}">
+                                            {% else %}
+                                                <li class="page-item disabled">
+                                                    <a class="page-link" disabled href="#" tabindex="-1">
+                                                    {% endif %}
+                                                Следующий</a>
+                                            </li>
+                                        </ul>
+                                    </nav>
+                                {% endif %}
                             </div>
                         </div>
-                    {% endblock content %}
-                    {% block footer %}
-                        <footer class="py-5 bg-dark">
-                            <div class="container">
-                                <p class="m-0 text-center text-white">Copyright &copy; Store 2022</p>
-                            </div>
-                        {% endblock footer %}
+                    </div>
+                {% endblock content %}
+                {% block footer %}
+                    <footer class="py-5 bg-dark">
+                        <div class="container">
+                            <p class="m-0 text-center text-white">Copyright &copy; Store 2022</p>
+                        </div>
+                    {% endblock footer %}
